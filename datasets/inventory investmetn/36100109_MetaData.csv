@@ -1,0 +1,74 @@
+﻿"Cube Title","Product Id","CANSIM Id",URL,"Cube Notes","Archive Status",Frequency,"Start Reference Period","End Reference Period","Total number of dimensions"
+"Investment in inventories, quarterly, Canada","36100109","380-0069","https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610010901",,"CURRENT - a cube available to the public and that is current","Quarterly","1961-01-01","2023-01-01","4",
+
+"Dimension ID","Dimension name","Dimension Notes","Dimension Definitions"
+"1","Geography",,""
+"2","Prices",,""
+"3","Seasonal adjustment",,""
+"4","Estimates",,""
+
+"Dimension ID","Member Name","Classification Code","Member ID","Parent Member ID",Terminated,"Member Notes","Member Definitions"
+"1","Canada","[11124]","1","","",,
+"2","Chained (2012) dollars","","1","","",,
+"2","Current prices","","2","","",,
+"2","Chained (2007) dollars","","3","","t",,
+"3","Seasonally adjusted at annual rates","","1","","",,
+"3","Unadjusted","","2","","",,
+"4","Business investment in inventories","","2","1","",,
+"4","Non-profit institutions serving households' investment in inventories","","23","1","",,
+"4","General government investment in inventories","","24","1","",,
+"4","Non-farm inventories","","3","2","",,
+"4","Farm inventories","","17","2","",,
+"4","Manufacturing","","4","3","",,
+"4","Trade","","7","3","",,
+"4","Gold","","15","3","",,
+"4","Other non-farm inventories","","16","3","",,
+"4","Durable goods","","5","4","",,
+"4","Non-durable goods","","6","4","",,
+"4","Retail","","8","7","",,
+"4","Wholesale","","12","7","",,
+"4","Durable goods","","9","8","",,
+"4","Non-durable goods","","11","8","",,
+"4","Of which: motor vehicles","","10","9","",,
+"4","Durable goods","","13","12","",,
+"4","Non-durable goods","","14","12","",,
+"4","Grain","","18","17","",,
+"4","Other farm-held inventories","","19","17","",,
+"4","Grain in commercial channels","","22","17","",,
+"4","Livestock","","20","19","",,
+"4","Other crops","","21","19","",,
+"4","Quarterly stock to sales ratio, manufacturing","","26","25","",,
+"4","Quarterly stock to sales ratio, retail trade","","27","25","",,
+"4","Quarterly stock to sales ratio, wholesale trade","","29","25","",,
+"4","Non-farm inventories, book value","","30","25","",,
+"4","Quarterly sales, total economy","","31","25","",,
+"4","Quarterly stock to sales ratio, retail trade - motor vehicles","","28","27","",,
+"4","Investment in inventories","","1","","",,
+"4","Quarterly stock to sales ratio, total economy","","25","","",,
+
+Symbol Legend
+Description,Symbol
+"not available for a specific reference period","..",
+"less than the limit of detection","<LOD",
+"value rounded to 0 (zero) where there is a meaningful distinction between true zero and the value that was rounded","0s",
+"data quality: excellent","A",
+"data quality: very good","B",
+"data quality: good","C",
+"data quality: acceptable","D",
+"use with caution","E",
+"too unreliable to be published","F",
+"not applicable","...",
+"preliminary","p",
+"revised","r",
+"suppressed to meet the confidentiality requirements of the Statistics Act","x",
+"terminated","t",
+
+"Survey Code","Survey Name"
+"1901","National Gross Domestic Product by Income and by Expenditure Accounts"
+
+"Subject Code","Subject Name"
+"36","Economic accounts"
+
+"Note ID",Note
+
+"Correction ID","Correction Date","Correction Note"
