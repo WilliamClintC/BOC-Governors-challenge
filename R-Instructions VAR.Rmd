@@ -1,0 +1,163 @@
+---
+title: "Governor's Challenge Notebook"
+output: html_notebook
+---
+
+This notebook contains the R-version of the code for the Governor's challenge; it follows the same format as the STATA tutorial.  Let's assume you've followed the tutorial up to the point where you're starting to import the data in STATA.
+
+I recommend using the software RStudio, because it has a nice user interface which is similar to other packages, and is fairly flexible with different R distributions.
+
+Here, we first want to import the GDP data.  We can do this using the <b>readr</b> package, which we need to install (if necessary; uncomment these if you don't have these packages), along with a couple others)
+
+```{r}
+#install.packages("gtools")
+#install.packages("readr")
+#install.packages("tidyr")
+#install.packages("dpylr")
+#install.packages("zoo")
+```
+
+Now, we can use this package to load the data:
+
+```{r}
+library(readr)
+data <- read_csv("C:/Users/Jonathan Graves/Downloads/GC2/36100434-eng/36100434.csv")
+```
+
+Next, we only want to keep the vector associated with the data we want
+
+```{r}
+data <- subset(data, VECTOR == "v65201210")
+head(data)
+```
+
+Now, we can do the same thing for the CPI data (loading it and subsetting it):
+
+```{r}
+data2 <- read_csv("C:/Users/Jonathan Graves/Downloads/GC2/18100004-eng/18100004.csv")
+data2 <- subset(data2, VECTOR == "v41690973")
+```
+
+Next, we want to append these datasets together, but first we have to keep only the columns they have in common
+
+```{r}
+data <- within(data, rm("Seasonal adjustment","Prices", "North American Industry Classification System (NAICS)"))
+data2 <- within(data2, rm("Products and product groups"))
+data <-  rbind(data,data2)
+head(data)
+```
+
+Now, let's convert the <b>ref_data</b> variable into a better format:
+
+```{r}
+library(zoo)
+data$DATE <- as.yearmon(data$REF_DATE)
+head(data)
+```
+
+Next, let's delete all of the useless variables:
+
+```{r}
+
+data <- within(data, rm("REF_DATE", "UOM", "UOM_ID","SCALAR_ID", "SYMBOL", "COORDINATE","STATUS","TERMINATED","DECIMALS", "SCALAR_FACTOR"))
+head(data)
+
+```
+
+Now, we need to reshape our dataset
+
+```{r}
+library(tidyr)
+library(dplyr)
+data <- spread(data, "VECTOR", "VALUE")
+```
+
+Finally, we will rename our variables and save the dataset:
+
+```{r}
+data <- rename(data, CPI = v41690973, GDP = v65201210)
+head(data)
+save(data,file="GDP_CPI_data.Rda")
+```
+
+# VAR Analysis
+
+We'll assume that to this point you've been following along.  Now, we have our data stored in our `data` object.  You may want to try out the model using the other dataset, but for now it's good to see how things are different.
+
+There's a very good reference on using VAR models in R, which you can find at https://www.econometrics-with-r.org/16-1-vector-autoregressions.html
+
+The main element we need to do first is to format our series in `data` as time series objects.  We know that they're monthly, staring in Januart 1914 and ending in June 2019.  This will require an extra package:
+
+```{r}
+
+#install.packages("quantmod")
+#install.packages("dynlm")
+#install.packages("lmtest")
+#install.packages("sandwich")
+#install.packages("vars")
+library(quantmod)
+library(dynlm)
+library(lmtest)
+library(sandwich)
+library(vars)
+
+```
+
+
+Next, we need to define and format our variables as time series objects, so we can compute VAR models from them.  We also want to create some difference objects:
+
+```{r}
+
+GDP <- ts(data$GDP[(data$DATE > "DEC 1999") & (data$DATE < "MAY 2019")], start=c(2000,1),end=c(2019,4),frequency=12)
+# the frequency is 12 because this is monthly data and there are 12 months in a year
+#Let's also start the analysis in 2000
+logGDP <- log(GDP)
+
+CPI <- ts(data$CPI[(data$DATE > "DEC 1999") & (data$DATE < "MAY 2019")], start=c(2000,1),end=c(2019,4),frequency=12)
+logCPI <- log(CPI)
+
+DlogGDP = 12*(logGDP - stats::lag(logGDP,n=-1))
+DlogCPI = 12*(logCPI - stats::lag(logCPI,n=-1))
+#we multiply by 12 here to get annualized rates
+
+```
+
+
+Now, we can make a two-variable VAR model.  First, we do it equation-by equation:
+
+```{r}
+
+VAR1 <- dynlm(DlogGDP ~ L(DlogGDP,1:2) + L(DlogCPI, 1:2), start = c(2000,3), end = c(2019,4))
+names(VAR1$coefficients) <- c("Constant", "GDP T-1", "GDP T-2", "Inflation T-1", "Inflation T-2")
+
+#Notice how we have to restrict the first 2 months to not enter the equation; this is because our data starts in Jan 2000, so there aren't two lags of data until Mar 2000
+
+coeftest(VAR1, vcov. = sandwich)
+
+VAR2 <- dynlm(DlogCPI ~ L(DlogGDP,1:2) + L(DlogCPI, 1:2), start = c(2000,3), end = c(2019,4))
+names(VAR2$coefficients) <- c("Constant", "GDP T-1", "GDP T-2", "Inflation T-1", "Inflation T-2")
+
+coeftest(VAR2, vcov. = sandwich)
+
+```
+
+Now, we can do it using a single VAR.  Notice how the results are the same:
+
+```{r}
+
+VAR_data <- window(ts.union(DlogGDP,DlogCPI), start=c(2000,1), end = c(2019,3))
+
+VAR_est <- VAR(y = VAR_data, p = 2)
+VAR_est
+
+```
+
+Now, let's forecast our VAR.  R automatically does an iterated forecast:
+
+```{r}
+
+forecast <- predict(VAR_est)
+
+forecast
+plot(forecast)
+```

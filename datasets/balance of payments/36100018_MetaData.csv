@@ -1,0 +1,82 @@
+﻿"Cube Title","Product Id","CANSIM Id",URL,"Cube Notes","Archive Status",Frequency,"Start Reference Period","End Reference Period","Total number of dimensions"
+"Balance of international payments, current account, seasonally adjusted, quarterly","36100018","376-0105","https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610001801",1,"CURRENT - a cube available to the public and that is current","Quarterly","1981-01-01","2023-01-01","3",
+
+"Dimension ID","Dimension name","Dimension Notes","Dimension Definitions"
+"1","Geography",,""
+"2","Receipts, payments and balances",,""
+"3","Current account",,""
+
+"Dimension ID","Member Name","Classification Code","Member ID","Parent Member ID",Terminated,"Member Notes","Member Definitions"
+"1","Canada","[11124]","1","","",,
+"2","Receipts, seasonally adjusted","","1","","",,
+"2","Payments, seasonally adjusted","","2","","",,
+"2","Balances, seasonally adjusted","","3","","",,
+"3","Goods and services","","2","1","",,
+"3","Primary income","","10","1","",,
+"3","Secondary income","","24","1","",,
+"3","Goods","","3","2","",,
+"3","Services","","5","2","",2,
+"3","Travel","","6","5","",,
+"3","Transportation","","7","5","",,
+"3","Commercial services","","8","5","",2,
+"3","Government services","","9","5","",,
+"3","Compensation of employees","","11","10","",,
+"3","Investment income","","12","10","",,
+"3","Direct investment income","","13","12","",,
+"3","Portfolio investment income","","18","12","",3;4,
+"3","Other investment income","","23","12","",3;4,
+"3","Direct investment income, interest","","14","13","",,
+"3","Direct investment income, profits","","15","13","",,
+"3","Direct investment income, dividends","","16","15","",,
+"3","Direct investment income, reinvested earnings","","17","15","",,
+"3","Portfolio investment income, interest on debt securities","","19","18","",3;4,
+"3","Portfolio investment income, dividends on equity and investment fund shares","","22","18","",,
+"3","Portfolio investment, interest on bonds","","20","19","",,
+"3","Portfolio investment, interest on money market instruments","","21","19","",3;4,
+"3","Private transfers","","25","24","",8,
+"3","Government transfers","","30","24","",,
+"3","Other private transfers","","26","25","",8,
+"3","Foreign taxes","","29","25","",5,
+"3","Personal transfers","","27","26","",,
+"3","Other private non-personal transfers","","28","26","",,
+"3","Canadian taxes","","31","30","",6,
+"3","Official contributions","","32","30","",7,
+"3","Other transfers of government","","33","30","",,
+"3","Total current account","","1","","",,
+
+Symbol Legend
+Description,Symbol
+"not available for a specific reference period","..",
+"less than the limit of detection","<LOD",
+"value rounded to 0 (zero) where there is a meaningful distinction between true zero and the value that was rounded","0s",
+"data quality: excellent","A",
+"data quality: very good","B",
+"data quality: good","C",
+"data quality: acceptable","D",
+"use with caution","E",
+"too unreliable to be published","F",
+"not applicable","...",
+"preliminary","p",
+"revised","r",
+"suppressed to meet the confidentiality requirements of the Statistics Act","x",
+"terminated","t",
+
+"Survey Code","Survey Name"
+"1534","Canada's Balance of International Payments"
+"1535","Canada's International Transactions in Securities"
+"1536","Canada's International Transactions in Services"
+
+"Subject Code","Subject Name"
+"36","Economic accounts"
+
+"Note ID",Note
+1,"For seasonally adjusted values prior to the first quarter of 1981, please see terminated table 36-10-0047-01 (formely: CANSIM 376-0005)."
+2,"Includes a general provision to cover legal, accounting and third-party management consulting until surveyed more specifically from 1995; also includes retail software exports before 1996."
+3,"Before 2002, receipts of money market interest are included indistinguishably with other investment and not with portfolio investment."
+4,"Prior to 1993, withholding tax applicable on payments of money market interest was included with interest on other investment. From 1993, it is included in interest on portfolio investment."
+5,"Foreign taxes are applicable only to payments where it refers to total withholding taxes paid by Canadian residents and which are initially part of various Canadian interest, dividend and services receipts."
+6,"Canadian taxes are applicable only to receipts where it refers to total withholding taxes received by the Government of Canada and which are initially part of various Canadian interest, dividend, and services payments."
+7,"Official contributions are applicable only to payments where it refers to official contributions made by the Canadian governments and their enterprises."
+8,"Private transfers and other private transfers include the counterpart of adjustments for insurance claims volatility made in the insurance services."
+
+"Correction ID","Correction Date","Correction Note"
