@@ -1,0 +1,64 @@
+---
+title: "BOC-VAR-Project"
+author: "William Clinton-Co"
+date: today
+format: compact-pdf
+---
+
+# Variables
+
+For the VAR model I collected the following variables: CPI, Unemployment, GDP, Canadian Overnight Rate, Household Spending, Investment, Net Exports and Wages. These variables were selected based of the [Bank of Canada April 2023 Monetary Policy Report](https://www.bankofcanada.ca/wp-content/uploads/2023/04/mpr-2023-04-12.pdf), wherein such variables were defined to be key variables for the economy going forward.
+
+# Stationary
+
+Non stationary variables would include: CPI, GDP, Household Spending, Investment, Wages. Because of inflation, these variables would tend to increase overtime. Other variables like Unemployment, increase overtime because of population growth. Because these variables are non stationary we will be considering first difference approach.
+
+Stationary variables would include: Overnight Rate and Net Exports. Net Exports being stationary is debatable. Nonetheless, this could easily be addressed by taking the rate of change. While the overnight rate is by definition stationary, it is bounded by the 2% inflation target.
+
+# Model
+
+We now code our model to produce the image below. The code can be found at [github](https://github.com/WilliamClintC/BOC-Module4-HW). The following describes the model, with $P$ representing the coefficient matrix.
+
+$$
+\begin{bmatrix} \Delta CPI \\ \Delta GDP\\ \Delta Unemployment\\ \Delta Consumption\\ \Delta Overnight Rate\\ \Delta Investment\\ \Delta NetExport\\ \end{bmatrix} = 
+\begin{bmatrix} \rho_0^{cpi} \\ \rho_0^{GDP} \\ \rho_0^{Unem} \\ \rho_0^{Cons} \\ \rho_0^{OR} \\ \rho_0^{Inv} \\ \rho_0^{NX}
+\end{bmatrix}+
+P_{t-1}\begin{bmatrix} \Delta CPI_{t-1} \\ \Delta GDP_{t-1}\\ \Delta Unemployment_{t-1}\\ \Delta Consumption_{t-1}\\ \Delta Overnight Rate_{t-1}\\ \Delta Investment_{t-1}\\ \Delta NetExport_{t-1}\\ \end{bmatrix} + 
+P_{t-2}\begin{bmatrix} \Delta CPI_{t-2} \\ \Delta GDP_{t-2}\\ \Delta Unemployment_{t-2}\\ \Delta Consumption_{t-2}\\ \Delta Overnight Rate_{t-2}\\ \Delta Investment_{t-2}\\ \Delta NetExport_{t-2}\\ \end{bmatrix}
++ P_\epsilon
+$$
+
+![](images/000010.png)
+
+# Inflation
+
+Looking at the top left graph, we see the forecast of CPI. We know that the change in CPI is associated with inflation, therefore we use this as our basis of observation. From our forecast we see that CPI has a big standard error, marked by the big upper and lower bound red lines. From this we say that the expected inflation rate is uncertain.
+
+Going deeper we analyze the coefficients given as
+
+``` r
+t test of coefficients:
+
+                      Estimate  Std. Error t value  Pr(>|t|)    
+Constant           -1.0335e-02  5.2628e-03 -1.9638 0.0523066 .  
+GDP T-1            -7.0040e-02  3.5669e-02 -1.9636 0.0523242 .  
+GDP T-2            -1.0671e-01  3.6621e-02 -2.9140 0.0043944 ** 
+Inflation T-1       3.2717e-01  9.9908e-02  3.2747 0.0014496 ** 
+Inflation T-2      -6.1342e-02  1.0366e-01 -0.5917 0.5553439    
+Unemployment T-1   -1.1885e-02  1.1017e-02 -1.0788 0.2832497    
+Unemployment T-2   -2.9985e-03  9.7632e-03 -0.3071 0.7593804    
+Wages T-1           1.4032e-01  4.6765e-02  3.0005 0.0033950 ** 
+Wages T-2          -4.8548e-02  5.2385e-02 -0.9268 0.3562621    
+Net Exports T-1    -6.5835e-06  7.5347e-06 -0.8738 0.3843209    
+Net Exports T-2     1.6020e-05  7.6614e-06  2.0911 0.0390324 *  
+Consumption T-1     1.3735e-01  3.4670e-02  3.9617 0.0001388 ***
+Consumption T-2     2.5642e-02  3.8161e-02  0.6719 0.5031518    
+Investment T-1      6.3554e-06  3.8719e-06  1.6414 0.1038186    
+Investment T-2      5.7564e-06  4.8913e-06  1.1769 0.2420155    
+Overnight Rate T-1 -6.8197e-04  2.4280e-03 -0.2809 0.7793827    
+Overnight Rate T-2  2.8358e-03  2.3583e-03  1.2025 0.2319821    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+```
+
+We see that GDP, wages, consumption and inflation are significant predictors of inflation. The inflation variable is a given so we disregard it in our discussion. We ignore the significance of the net exports variable as it is only significant at \$T-2\$. According to our results, as GDP increases inflation recedes. It could be the case that GDP increases, increases monetary tightening . Such results were similar to Professor Viktoriya's older results. So to predict inflation we analyze forecasted GDP and realize foretasted GDP is also uncertain. More intuitive are the wages and consumption variables. Consumption is uncertain as well but wages are forecasted to be temporarily higher, after taking into account standard errors. Given this realization, we notice that wages has a positive coefficient against inflation. With this said, it must be the case that **inflation should be higher in the short term**[.]{.underline}
