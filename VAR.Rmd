@@ -101,7 +101,22 @@ Now, let's forecast our VAR. R automatically does an iterated forecast:
 
 forecast <- predict(VAR_est)
 
-par(mar = c(2, 1, 1, 1))
+par(mar = c(2, 1, 1, 1)) #sizing options
 forecast
 plot(forecast)
+```
+```{r}
+# Load the required libraries
+library(dynlm)
+library(openxlsx)
+
+# Assuming you have already estimated the 'dynlm' model and stored it in the variable 'model'
+
+# Export the model summary to an Excel file
+file_path <- "excel_file.xlsx"
+wb <- createWorkbook()
+addWorksheet(wb, "Model Summary")
+writeData(wb, "Model Summary", summary(VAR2)$coef, startCol = 1, startRow = 1, colNames = TRUE)
+saveWorkbook(wb, file_path)
+
 ```
