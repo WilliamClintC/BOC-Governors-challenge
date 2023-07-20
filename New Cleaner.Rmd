@@ -1,0 +1,114 @@
+---
+title: "Governor's Challenge Notebook"
+output: html_notebook
+---
+
+We import our data
+
+```{r}
+library(readr)
+library(dplyr)
+
+
+gdp <- read_csv("datasets\\growth\\36100434.csv")
+gdp <- subset(gdp, VECTOR == "v65201210")
+
+inflation <- read_csv("datasets\\inflation\\18100004.csv")
+inflation <- subset(inflation, VECTOR == "v41690973")
+
+unemployment <- read_csv("datasets\\unemployment\\1410028701_databaseLoadingData.csv")
+unemployment <- subset(unemployment, VECTOR == "v2062814")
+
+Inventory_Investment <- read_csv("datasets\\inventory investmetn\\36100109.csv")
+Inventory_Investment <- subset(Inventory_Investment, VECTOR == "v61992666")
+
+wages <- read_csv("datasets\\wages\\1410006301_databaseLoadingData.csv")
+wages <- subset(wages, VECTOR == "v2132579")
+
+bal_of_pay <- read_csv("datasets\\balance of payments\\36100018.csv")
+bal_of_pay <- subset(bal_of_pay, VECTOR == "v61915304")
+
+cons_spend <- read_csv("datasets\\consumption spending\\36100124.csv")
+cons_spend <- subset(cons_spend, VECTOR == "v62700456")
+
+rate <- read_csv("datasets\\Rate.csv")
+
+```
+We isolate columns we need. 
+
+```{r}
+
+bal_of_pay <- bal_of_pay %>% select(REF_DATE, VALUE)
+cons_spend <- cons_spend %>% select(REF_DATE, VALUE)
+wages <- wages %>% select(REF_DATE, VALUE)
+Inventory_Investment <- Inventory_Investment %>% select(REF_DATE, VALUE)
+unemployment <- unemployment %>% select(REF_DATE, VALUE)
+inflation <- inflation %>% select(REF_DATE, VALUE)
+gdp <- gdp %>% select(REF_DATE, VALUE)
+
+
+```
+
+We make the intervals the same
+```{r}
+library(zoo)
+
+z <- read.zoo(bal_of_pay, FUN = function(x) as.yearqtr(paste0(x, "-01"), "%Y-%m-%d"))
+
+Value <- zooreg(na.approx(c(t(cbind(z, NA, NA)))), 
+  start = as.yearmon(start(z)), freq = 12)
+bal_of_pay <- fortify.zoo(Value) 
+
+
+z <- read.zoo(cons_spend, FUN = function(x) as.yearqtr(paste0(x, "-01"), "%Y-%m-%d"))
+
+Value <- zooreg(na.approx(c(t(cbind(z, NA, NA)))), 
+  start = as.yearmon(start(z)), freq = 12)
+cons_spend <- fortify.zoo(Value) 
+
+
+z <- read.zoo(Inventory_Investment, FUN = function(x) as.yearqtr(paste0(x, "-01"), "%Y-%m-%d"))
+
+Value <- zooreg(na.approx(c(t(cbind(z, NA, NA)))), 
+  start = as.yearmon(start(z)), freq = 12)
+Inventory_Investment <- fortify.zoo(Value) 
+
+```
+
+We combined data-sets
+```{r}
+
+merged_df <- merge(gdp, inflation, by = 'REF_DATE')
+merged_df <- merge(merged_df, unemployment, by = 'REF_DATE')
+merged_df <- merge(merged_df, wages, by = 'REF_DATE')
+merged_df <- setNames(merged_df, c('Date','GDP', 'Inflation','Unemployment','Wages'))
+
+```
+We combine data-sets, while considering different formats. 
+
+```{r}
+
+colnames(bal_of_pay)[1] <- 'Date'
+colnames(cons_spend)[1] <- 'Date'
+colnames(Inventory_Investment)[1] <- 'Date'
+colnames(rate)[1] <- 'Date'
+
+rate$Date <- as.yearmon(rate$Date, format = "%y-%b")
+merged_df$Date <- as.yearmon(merged_df$Date, format = "%Y-%m")
+merged_df <- merge(merged_df, bal_of_pay, by = 'Date')
+merged_df <- merge(merged_df, cons_spend, by = 'Date')
+merged_df <- merge(merged_df, Inventory_Investment, by = 'Date')
+merged_df <- merge(merged_df, rate, by = 'Date')
+
+merged_df <- setNames(merged_df, c('Date','GDP', 'CPI','Unemployment','Wages','Balance of Payments','Consumption Spending','Inventory Investment','Rate'))
+```
+
+We now have finished cleaning our data. 
+
+
+We save our data. Next we convert our data to a time series. 
+```{r}
+library(openxlsx)
+file_path <- "combined.xlsx"
+write.xlsx(merged_df, file = file_path, rowNames = TRUE)
+```

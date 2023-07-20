@@ -1763,15 +1763,47 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShxdWFudG1vZClcbmxpYnJhcnkoZHlubG0pXG5saWJyYXJ5KGxtdGVzdClcbmxpYnJhcnkoc2FuZHdpY2gpXG5saWJyYXJ5KHZhcnMpXG5cblxuR0RQIDwtIHRzKG1lcmdlZF9kZiRHRFBbKG1lcmdlZF9kZiREYXRlID49IFwiSmFuIDIwMTNcIikgJiAobWVyZ2VkX2RmJERhdGUgPD0gXCJKYW4gMjAyM1wiKV0sIHN0YXJ0PWMoMjAxMywxKSxlbmQ9YygyMDIzLDEpLGZyZXF1ZW5jeT0xMilcbmxvZ0dEUCA8LSBsb2coR0RQKVxuRGxvZ0dEUCA9IDEyKihsb2dHRFAgLSBzdGF0czo6bGFnKGxvZ0dEUCxuPS0xKSlcblxuYGBgIn0= -->
-<pre class="r"><code>library(quantmod)
-library(dynlm)
-library(lmtest)
-library(sandwich)
-library(vars)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShxdWFudG1vZClcbmBgYCJ9 -->
+<pre class="r"><code>library(quantmod)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiB4dHNcbkxvYWRpbmcgcmVxdWlyZWQgcGFja2FnZTogem9vXG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJh6b2/igJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmJhc2XigJk6XG5cbiAgICBhcy5EYXRlLCBhcy5EYXRlLm51bWVyaWNcblxuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBUVFJcblJlZ2lzdGVyZWQgUzMgbWV0aG9kIG92ZXJ3cml0dGVuIGJ5ICdxdWFudG1vZCc6XG4gIG1ldGhvZCAgICAgICAgICAgIGZyb21cbiAgYXMuem9vLmRhdGEuZnJhbWUgem9vIFxuIn0= -->
+<pre><code>Loading required package: xts
+Loading required package: zoo
 
+Attaching package: ‘zoo’
 
-GDP &lt;- ts(merged_df$GDP[(merged_df$Date &gt;= &quot;Jan 2013&quot;) &amp; (merged_df$Date &lt;= &quot;Jan 2023&quot;)], start=c(2013,1),end=c(2023,1),frequency=12)
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: TTR
+Registered S3 method overwritten by &#39;quantmod&#39;:
+  method            from
+  as.zoo.data.frame zoo </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkeW5sbSlcbmxpYnJhcnkobG10ZXN0KVxuYGBgIn0= -->
+<pre class="r"><code>library(dynlm)
+library(lmtest)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYbG10ZXN04oCZXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0cyBhcmUgbWFza2VkIF9ieV8g4oCYLkdsb2JhbEVuduKAmTpcblxuICAgIHVuZW1wbG95bWVudCwgd2FnZXNcbiJ9 -->
+<pre><code>
+Attaching package: ‘lmtest’
+
+The following objects are masked _by_ ‘.GlobalEnv’:
+
+    unemployment, wages</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzYW5kd2ljaClcbmxpYnJhcnkodmFycylcbmBgYCJ9 -->
+<pre class="r"><code>library(sandwich)
+library(vars)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBNQVNTXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IHN0cnVjY2hhbmdlXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IHVyY2FcbiJ9 -->
+<pre><code>Loading required package: MASS
+Loading required package: strucchange
+Loading required package: urca</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuR0RQIDwtIHRzKG1lcmdlZF9kZiRHRFBbKG1lcmdlZF9kZiREYXRlID49IFwiSmFuIDIwMTNcIikgJiAobWVyZ2VkX2RmJERhdGUgPD0gXCJKYW4gMjAyM1wiKV0sIHN0YXJ0PWMoMjAxMywxKSxlbmQ9YygyMDIzLDEpLGZyZXF1ZW5jeT0xMilcbmxvZ0dEUCA8LSBsb2coR0RQKVxuRGxvZ0dEUCA9IDEyKihsb2dHRFAgLSBzdGF0czo6bGFnKGxvZ0dEUCxuPS0xKSlcblxuYGBgIn0= -->
+<pre class="r"><code>GDP &lt;- ts(merged_df$GDP[(merged_df$Date &gt;= &quot;Jan 2013&quot;) &amp; (merged_df$Date &lt;= &quot;Jan 2023&quot;)], start=c(2013,1),end=c(2023,1),frequency=12)
 logGDP &lt;- log(GDP)
 DlogGDP = 12*(logGDP - stats::lag(logGDP,n=-1))
 </code></pre>
